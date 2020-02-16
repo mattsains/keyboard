@@ -1,0 +1,20 @@
+[metadata]
+name = 'tutor'
+version = '0.0.1'
+description = 'Companion program to my ASETNIOP keyboard '
+author = 'Matthew Sainsbury'
+author_email = 'matthew@sainsbury.io'
+license = 'MIT'
+url = 'https://github.com/mattsains/keyboard'
+
+[requires]
+python_version = ['2.7', '3.5', '3.6', 'pypy', 'pypy3']
+
+[dependencies]
+hid = "^1.0.4"
+
+[build-system]
+requires = ['setuptools', 'wheel']
+
+[tool.hatch.commands]
+prerelease = 'hatch build'
