@@ -1,8 +1,7 @@
+#include "betterkeyboard.h"
+
 #include <Wire.h>
 #include <avr/pgmspace.h>
-
-
-#include "Keyboard.h"
 
 const char string_0[] PROGMEM = "a";
 const char string_1[] PROGMEM = "s";
@@ -274,6 +273,9 @@ void setup() {
   Wire.begin(); // connect to left hand
 
   Keyboard.begin();
+
+  delay(500);
+  Keyboard.writeRaw(232);
 }
 
 void loop() {

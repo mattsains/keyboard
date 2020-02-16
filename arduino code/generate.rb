@@ -13,7 +13,7 @@ strings = [
     "r",
     "are",
     "set",
-    "were",
+    "\\t",
     "n",
     "q",
     "j",
