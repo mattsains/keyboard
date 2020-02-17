@@ -18,7 +18,7 @@ with open('tutor/__init__.py', 'r') as f:
 with open('README.rst', 'r', encoding='utf-8') as f:
     readme = f.read()
 
-REQUIRES = []
+REQUIRES = ["hid", "tkinter", "pysimplegui"]
 
 kwargs = {
     'name': 'tutor',
