@@ -9,6 +9,8 @@ int keystroke = 0;
 
 boolean constructing = true;
 
+int sendKeyUpdates = 10;
+
 void setup() {
   for (byte i=4; i<9; i++) {
     pinMode(i, INPUT_PULLUP);
@@ -65,7 +67,6 @@ void getKeystroke() {
   }
 
   if (keyWasReleased && constructing) {
-    byte index = 0;
     for (byte i=0; i<10; i++) {
       if (lastKeyState[i]) {
         keystroke |= 1<<i;
@@ -77,6 +78,18 @@ void getKeystroke() {
 
   for(byte i=0; i<10; i++) {
     lastKeyState[i] = keyState[i];
+  }
+
+  // periodically, let the computer know what keys are being held down, for the tutor.
+  if (sendKeyUpdates-- == 0) {
+    sendKeyUpdates = 10;
+
+    Keyboard.writeRaw(232);
+    for (byte i=0; i<10; i++) {
+      if (keyState[i])
+        Keyboard.writeRaw(233 + i);
+    }
+    Keyboard.writeRaw(243);
   }
 
   if (keyWasReleased) constructing = false;
