@@ -1,7 +1,5 @@
-#include "betterkeyboard.h"
+#include "keyboard.h"
 
-#include <Wire.h>
-#include <avr/pgmspace.h>
 
 const char string_0[] PROGMEM = "a";
 const char string_1[] PROGMEM = "s";
@@ -269,7 +267,7 @@ void setup() {
   for (byte i=4; i<9; i++) {
     pinMode(i, INPUT_PULLUP);
   }
-  
+
   Wire.begin(); // connect to left hand
 
   Keyboard.begin();
@@ -293,7 +291,7 @@ void loop() {
     if (buffer[0] >= 'a' && buffer[0] <= 'z') buffer[0] += 'A' -'a';
     Keyboard.print(buffer);
   }
-  
+
   delay(10);
 }
 
@@ -304,7 +302,7 @@ void getKeystroke() {
 
   boolean keyWasReleased = false;
   for(byte i=0; i<10; i++) {
-    
+
     if (lastKeyState[i] && !keyState[i]) {
       keyWasReleased = true;
       break;
@@ -313,7 +311,7 @@ void getKeystroke() {
 
   boolean keyWasPressed = false;
   for(byte i=0; i<10; i++) {
-    
+
     if (keyState[i] && !lastKeyState[i]) {
       keyWasPressed = true;
       break;
