@@ -4,6 +4,8 @@ import hid
 
 import PySimpleGUI as sg
 
+import keycircle as keyCircle
+
 strings = [
   "a",
   "s",
@@ -213,10 +215,11 @@ strings = [
   "power",
   "up",
   "",
-  "sum", #jumped
+  "sum", #jump
   "woman",
-  "monkey",
+  "money",
   "",
+  "some"
   "women",
   "put",
   "among",
@@ -270,41 +273,69 @@ def getKeys(keyboard):
     while getKeyboardByte(keyboard) != 232:
         pass
 
-    result = []
+    result = set()
 
     while True:
         key = getKeyboardByte(keyboard)
         if (key == 243):
             break
-        result.append(key - 232)
+        result.add(key - 232)
 
     return result
 
 sg.theme('DarkAmber')
 
-labels = list(map(lambda k: sg.Text(k, font=("Monospace",20), size=(10, 10)), [strings[2**i - 1] for i in range(0, 8)]))
+elements = [keyCircle.keycircle([strings[2**i - 1]], i == 4) for i in range(0, 8)]
 
-window = sg.Window('Tutor', [labels])
 
-def getIfPressed(keys):
+window = sg.Window('Tutor', [[sg.Column([[circle.get()]]) for circle in elements]], keep_on_top=True)
+
+def mapKeys(keys, uppercase):
     index = 0
     for v in keys:
-        index += 2**(v-1)
+        index += 2**(v - 1)
 
-    return [strings[(index | 2**(i-1)) - 1] if i not in keys else ' ' for i in range(1, 9)]
+    if (index < len(strings)):
+        s = strings[index - 1]
+        if (uppercase):
+            return s.title()
+        else:
+            return s
+    else:
+        return ''
+
+
+def getIfPressed(keys, uppercase):
+    index = 0
+    for v in keys:
+        index += 2**(v - 1)
+
+    return [mapKeys(keys | set([i]), uppercase) for i in list(range(1, 9)) ]
+
+def getLabels(current, keys, uppercase):
+    if (current in keys):
+        return []
+    else:
+        first = mapKeys(keys | set([current]), uppercase)
+        options = getIfPressed(keys | set([current]), uppercase)
+        options = list(filter(lambda k: k != first, options))
+        options.insert(0, first)
+        return options
+
 
 with hid.Device(9025, 32823) as keyboard:
-    lastKeys = []
+    lastKeys = set()
     while True:
-        event, values = window.read(timeout = 100)
+        event, values = window.Read(timeout = 100)
         if event in (None, 'Cancel'):
             break
         keys = getKeys(keyboard)
         if (keys != lastKeys):
-            lastKeys = getKeys(keyboard)
-            ifPressed = getIfPressed(keys)
-            print(ifPressed)
-            for i, v in enumerate(ifPressed):
-                labels[i].Update(v)
+            lastKeys = keys
+            for current in range(1, 9):
+                tempKeys = keys - set([9, 10])
+                uppercase = 9 in keys
+                options = getLabels(current, tempKeys, uppercase)
+                elements[current-1].update(options)
 
 window.close()
