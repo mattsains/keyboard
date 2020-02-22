@@ -255,7 +255,19 @@ strings = [
   "especially", #himself
 ]
 
-File.new("./lib/generated.cpp", "w") do |cpp|
+uppercase_punctuation = {
+  "!" => "@",
+  "\\'" => "\"",
+  ";" => ":",
+  "," => "<",
+  "." => ">",
+  "?" => "/",
+  "(" => "[",
+  ")" => "]",
+  "-" => "_",
+}
+
+File.open("./lib/generated.cpp", "w") do |cpp|
   strings.each_with_index do |s, index|
     cpp.puts "const char string_#{index}[] PROGMEM = \"#{s}\";"
   end
@@ -265,4 +277,17 @@ File.new("./lib/generated.cpp", "w") do |cpp|
   cpp.print strings.map.with_index { |s, index| "string_#{index}" }.join(", ")
 
   cpp.puts "};"
+
+  cpp.puts "#define KEYMAP_LENGTH #{strings.length}"
+
+  cpp.print "const PROGMEM char puncKeys[] = { "
+  cpp.print uppercase_punctuation.keys.map {|c| "'#{c}'"}.join(', ')
+  cpp.puts " };"
+
+  cpp.print "const PROGMEM char puncUpper[] = { "
+  cpp.print (uppercase_punctuation.values.map {|c| "'#{c}'"}).join(', ')
+  cpp.puts " };"
+
+  cpp.puts "#define PUNC_COUNT #{uppercase_punctuation.keys.length}"
+
 end

@@ -29,14 +29,23 @@ void loop() {
 
   char buffer[10];
 
-  if (keystroke > 0 && keystroke < 253) {
+  if (keystroke > 0 && keystroke < KEYMAP_LENGTH) {
     strcpy_P(buffer, (char *)pgm_read_word(&(keymap[keystroke-1])));
     Keyboard.print(buffer);
-  } else if (keystroke == 1<<9) {
+  } else if (keystroke == 1<<SPACE_POS) {
     Keyboard.print(" ");
-  } else if (keystroke > 1<<8 && keystroke < (253 + (1<<8))) {
+  } else if (keystroke > 1<<UPPERCASE_POS && keystroke < (KEYMAP_LENGTH + (1<<UPPERCASE_POS))) {
     strcpy_P(buffer, (char *)pgm_read_word(&(keymap[(keystroke - (1<<8) )-1])));
-    if (buffer[0] >= 'a' && buffer[0] <= 'z') buffer[0] += 'A' -'a';
+    if (buffer[0] >= 'a' && buffer[0] <= 'z') {
+      buffer[0] += 'A' -'a';
+    } else {
+      for (byte i = 0; i < PUNC_COUNT; i++) {
+        if (buffer[0] == (char) pgm_read_byte_near(puncKeys + i)) {
+          buffer[0] = (char) pgm_read_byte_near(puncUpper + i);
+          break;
+        }
+      }
+    }
     Keyboard.print(buffer);
   }
 
