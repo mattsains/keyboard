@@ -263,6 +263,18 @@ strings = [
   "especially", #himself
 ]
 
+uppercase_punctuation = {
+  "!": "@",
+  "'": "\"",
+  ";": ":",
+  ",": "<",
+  ".": ">",
+  "?": "/",
+  "(": "[",
+  ")": "]",
+  "-": "_",
+}
+
 def getKeyboardByte(keyboard):
     while True:
         result = keyboard.read(9)[3]
@@ -291,7 +303,10 @@ def mapKeys(keys, uppercase):
     if (index < len(strings)):
         s = strings[index - 1]
         if (uppercase):
-            return s.title()
+            if (s in uppercase_punctuation):
+                return uppercase_punctuation[s]
+            else:
+                return s.title()
         else:
             return s
     else:
