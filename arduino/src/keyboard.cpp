@@ -110,6 +110,6 @@ void getKeyState() {
     keyState[i-1] = digitalRead(i) == LOW;
   }
 
-  keyState[8] = (c&1<<4) == 0;
-  keyState[9] = digitalRead(4) == LOW;
+  keyState[8] = digitalRead(4) == LOW;
+  keyState[9] = (c&1<<4) == 0;
 }

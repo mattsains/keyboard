@@ -283,13 +283,6 @@ def getKeys(keyboard):
 
     return result
 
-sg.theme('DarkAmber')
-
-elements = [keyCircle.keycircle([strings[2**i - 1]], i == 4) for i in range(0, 8)]
-
-
-window = sg.Window('Tutor', [[sg.Column([[circle.get()]]) for circle in elements]], keep_on_top=True)
-
 def mapKeys(keys, uppercase):
     index = 0
     for v in keys:
@@ -306,10 +299,6 @@ def mapKeys(keys, uppercase):
 
 
 def getIfPressed(keys, uppercase):
-    index = 0
-    for v in keys:
-        index += 2**(v - 1)
-
     return [mapKeys(keys | set([i]), uppercase) for i in list(range(1, 9)) ]
 
 def getLabels(current, keys, uppercase):
@@ -322,6 +311,11 @@ def getLabels(current, keys, uppercase):
         options.insert(0, first)
         return options
 
+sg.theme('DarkAmber')
+
+elements = [keyCircle.keycircle(getLabels(i, set([]), False), i == 5) for i in range(1, 9)]
+
+window = sg.Window('Tutor', [[sg.Column([[circle.get()]]) for circle in elements]], keep_on_top=True)
 
 with hid.Device(9025, 32823) as keyboard:
     lastKeys = set()

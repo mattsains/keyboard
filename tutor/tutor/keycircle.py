@@ -31,7 +31,7 @@ class keycircle:
         textSize = 10
         color = 'gray'
 
-      return sg.Text(text, size=(4, 1), text_color=color, font=('Monospace', textSize))
+      return sg.Text(text, size=(4, 1), text_color=color, justification='center', font=('Monospace', textSize))
 
     self.layout = [
       [createElement(v) for v in row]
