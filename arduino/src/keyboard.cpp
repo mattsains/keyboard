@@ -36,7 +36,7 @@ void loop() {
     Keyboard.print(" ");
   } else if ((keystroke & (1<<UPPERCASE_POS)) != 0) {
     keystroke -= 1<<UPPERCASE_POS;
-    if (keystroke < KEYMAP_LENGTH) {
+    if (keystroke != 0 && keystroke < KEYMAP_LENGTH) {
       strcpy_P(buffer, (char *)pgm_read_word(&(keymap[keystroke-1])));
       if (buffer[0] >= 'a' && buffer[0] <= 'z') {
         buffer[0] += 'A' -'a';
